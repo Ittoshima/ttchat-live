@@ -1,0 +1,29 @@
+{
+  "name": "tiktok-live-chat-web",
+  "version": "1.0.0",
+  "description": "Real-time TikTok Live Chat Reader & Streamer Overlay with TTS & Gift Alerts",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "tiktok",
+    "tiktok-live",
+    "chat",
+    "overlay",
+    "tts",
+    "obs"
+  ],
+  "author": "TTChat Team",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1",
+    "tiktok-live-connector": "^2.4.4"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.3"
+  }
+}
