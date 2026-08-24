@@ -1,0 +1,172 @@
+:root {
+  --primary-pink: #fe2c55;
+  --primary-cyan: #25f4ee;
+  --accent-gold: #ffbe1a;
+  --overlay-bg: rgba(15, 20, 30, 0.82);
+  --overlay-text: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Kanit', sans-serif;
+  background-color: transparent !important;
+  color: var(--overlay-text);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+}
+
+/* Chat container for OBS */
+#overlay-chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 480px;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Floating message item */
+.overlay-chat-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: overlaySlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: opacity 0.5s ease;
+}
+
+@keyframes overlaySlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.overlay-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.overlay-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.overlay-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.overlay-nickname {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.overlay-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.overlay-badge-mod {
+  background: rgba(37, 244, 238, 0.3);
+  color: var(--primary-cyan);
+  border: 1px solid rgba(37, 244, 238, 0.5);
+}
+
+.overlay-badge-sub {
+  background: rgba(254, 44, 85, 0.3);
+  color: var(--primary-pink);
+  border: 1px solid rgba(254, 44, 85, 0.5);
+}
+
+.overlay-message {
+  font-size: 0.92rem;
+  color: #f1f5f9;
+  line-height: 1.35;
+  word-break: break-word;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* Floating Gift Alert Popup for OBS */
+#overlay-gift-banner {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(20, 20, 30, 0.9), rgba(40, 20, 35, 0.9));
+  border: 2px solid var(--accent-gold);
+  border-radius: 16px;
+  padding: 10px 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 190, 26, 0.3);
+  backdrop-filter: blur(12px);
+  transform: translateX(-150%);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 999;
+}
+
+#overlay-gift-banner.show {
+  transform: translateX(0);
+}
+
+.overlay-gift-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px var(--accent-gold));
+}
+
+.overlay-gift-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.overlay-gift-user {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.overlay-gift-name {
+  font-size: 0.82rem;
+  color: var(--accent-gold);
+}
+
+.overlay-gift-count {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--primary-pink);
+  margin-left: 10px;
+  text-shadow: 0 0 10px var(--primary-pink);
+}
