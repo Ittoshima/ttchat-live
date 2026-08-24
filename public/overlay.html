@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTChat Overlay - OBS Browser Source</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="stylesheet" href="/css/overlay.css">
+</head>
+<body>
+  <!-- Floating Gift Banner for OBS -->
+  <div id="overlay-gift-banner">
+    <img id="overlay-gift-img" class="overlay-gift-img" src="" alt="Gift">
+    <div class="overlay-gift-text">
+      <div class="overlay-gift-user" id="overlay-gift-user">User</div>
+      <div class="overlay-gift-name" id="overlay-gift-name">ส่งของขวัญ</div>
+    </div>
+    <div class="overlay-gift-count" id="overlay-gift-count">x1</div>
+  </div>
+
+  <!-- Messages stream -->
+  <div id="overlay-chat-container"></div>
+
+  <script src="/js/overlay.js"></script>
+</body>
+</html>
