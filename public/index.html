@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a0d14">
+  <title>TTChat - จออ่านแชท TikTok Live</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- STEP 1: CONNECT SCREEN (ต้องเชื่อมต่อก่อนถึงจะเข้าใช้งาน) -->
+  <div class="screen-view active" id="view-connect">
+    <div class="connect-card">
+      <div class="brand-badge-icon">
+        <i data-lucide="radio"></i>
+      </div>
+      <h1>TTChat Live</h1>
+      <p class="subtitle">ระบบอ่านแชทและแจ้งเตือน TikTok Live</p>
+
+      <form class="connect-form" id="connect-form" onsubmit="return false;">
+        <div class="input-field">
+          <span class="prefix">@</span>
+          <input 
+            type="text" 
+            id="input-username" 
+            placeholder="ใส่ชื่อ TikTok username ที่กำลัง Live..." 
+            autocomplete="off"
+            autofocus
+          >
+        </div>
+
+        <button type="button" id="btn-start" class="btn-main">
+          <i data-lucide="play"></i>
+          <span>เชื่อมต่อ &amp; เริ่มอ่านแชท</span>
+        </button>
+
+        <div id="connect-error" class="error-text" style="display: none;"></div>
+      </form>
+
+      <div class="feature-pills">
+        <span id="device-pill-badge" class="device-pill">🔍 กำลังตรวจจับอุปกรณ์...</span>
+        <span>💬 อ่านแชทสด</span>
+        <span>🎁 แจ้งเตือนของขวัญ</span>
+        <span>💖 แจ้งเตือนคนติดตาม</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 & 3: LIVE STREAM CHAT & ALERTS SCREEN -->
+  <div class="screen-view" id="view-live">
+    <!-- Header Bar -->
+    <header class="live-header">
+      <div class="live-status-left">
+        <span class="live-dot"></span>
+        <div class="streamer-meta">
+          <span class="streamer-name" id="display-username">@username</span>
+          <div class="streamer-submeta">
+            <span class="viewer-count" id="display-viewers">👀 0 คนดู</span>
+            <span class="device-tag" id="live-device-tag">📱 มือถือ</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Desktop helper: QR Code button for mobile -->
+        <button id="btn-show-qr" class="btn-icon desktop-only" title="เปิดบนมือถือ (QR Code)" style="display: none;">
+          <i data-lucide="smartphone"></i>
+        </button>
+
+        <!-- Font size toggle -->
+        <button id="btn-font-toggle" class="btn-icon" title="ขนาดตัวอักษร">
+          <span id="label-font-size">L</span>
+        </button>
+
+        <!-- Fullscreen -->
+        <button id="btn-fullscreen" class="btn-icon" title="เต็มจอ">
+          <i data-lucide="maximize"></i>
+        </button>
+
+        <!-- Disconnect -->
+        <button id="btn-disconnect" class="btn-exit" title="ออกจากห้อง">
+          <i data-lucide="log-out"></i>
+          <span>ออก</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Live Stats Bar (4 รายการ: คนดูสด, ผู้ติดตามใหม่, ยอดเพชร, ยอดกดใจ) -->
+    <div class="live-stats-bar">
+      <div class="stat-pill">
+        <span class="stat-pill-icon color-viewers"><i data-lucide="users"></i></span>
+        <div class="stat-pill-text">
+          <span class="stat-pill-title">คนดูสด</span>
+          <span class="stat-pill-val" id="live-stat-viewers">0</span>
+        </div>
+      </div>
+
+      <div class="stat-pill">
+        <span class="stat-pill-icon color-followers"><i data-lucide="user-plus"></i></span>
+        <div class="stat-pill-text">
+          <span class="stat-pill-title">ติดตามใหม่</span>
+          <span class="stat-pill-val" id="live-stat-followers">0</span>
+        </div>
+      </div>
+
+      <div class="stat-pill stat-pill-diamonds" id="stat-pill-diamonds" title="เพชร 1 เม็ด ≈ 0.0875 บาท">
+        <span class="stat-pill-icon color-diamonds"><i data-lucide="gem"></i></span>
+        <div class="stat-pill-text">
+          <div class="stat-pill-title-row">
+            <span class="stat-pill-title">ยอดเพชร</span>
+            <span class="diamond-thb-sub" id="live-stat-diamonds-thb">≈ ฿0.00</span>
+          </div>
+          <span class="stat-pill-val" id="live-stat-diamonds">0</span>
+        </div>
+      </div>
+
+      <div class="stat-pill">
+        <span class="stat-pill-icon color-likes"><i data-lucide="heart"></i></span>
+        <div class="stat-pill-text">
+          <span class="stat-pill-title">ยอดกดใจ</span>
+          <span class="stat-pill-val" id="live-stat-likes">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Keyboard Shortcuts Banner -->
+    <div class="desktop-shortcuts-bar desktop-only" id="desktop-shortcuts" style="display: none;">
+      <span>💡 คีย์ลัด: <strong>Space</strong> (หยุด/เลื่อนต่อ) | <strong>+ / -</strong> (ปรับขนาดตัวอักษร) | <strong>F</strong> (เต็มจอ)</span>
+    </div>
+
+    <!-- Chat & Alerts Stream -->
+    <main class="chat-feed" id="chat-feed">
+      <div class="stream-ready-card" id="ready-card">
+        <i data-lucide="check-circle-2"></i>
+        <h3>เชื่อมต่อไลฟ์สำเร็จแล้ว!</h3>
+        <p>รอรับข้อความแชท, ของขวัญ และผู้ติดตามใหม่...</p>
+      </div>
+    </main>
+
+    <!-- Floating Scroll to Bottom button -->
+    <button id="btn-scroll-bottom" class="floating-scroll-btn" style="display: none;">
+      <i data-lucide="arrow-down"></i>
+      <span>แตะเพื่อเลื่อนลงสุด</span>
+    </button>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
