@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>TTChat Mobile Reader - จออ่านแชทสำหรับมือถือ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Socket.io -->
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="/css/mobile.css">
+</head>
+<body class="font-size-large">
+  <!-- Mobile Header Bar -->
+  <header class="mobile-header">
+    <div class="mobile-header-top">
+      <div class="channel-info">
+        <span class="live-pulse" id="live-indicator"></span>
+        <div class="channel-text">
+          <span class="channel-name" id="display-channel-name">@ไม่ได้เชื่อมต่อ</span>
+          <span class="viewers-count" id="display-viewers">👀 0 คน</span>
+        </div>
+      </div>
+
+      <div class="header-tools">
+        <!-- Wake Lock Indicator -->
+        <button id="btn-wakelock" class="tool-btn active" title="ป้องกันจอดับ (Screen Wake Lock)">
+          <i data-lucide="sun"></i>
+        </button>
+
+        <!-- Font Size Toggle -->
+        <button id="btn-font-size" class="tool-btn" title="เปลี่ยนขนาดตัวหนังสือ">
+          <span id="font-size-label">L</span>
+        </button>
+
+        <!-- Fullscreen Button -->
+        <button id="btn-fullscreen" class="tool-btn" title="เต็มจอ (Fullscreen)">
+          <i data-lucide="maximize-2"></i>
+        </button>
+
+        <!-- Quick Switch Channel / Settings -->
+        <button id="btn-channel-modal" class="tool-btn" title="เปลี่ยนช่อง TikTok">
+          <i data-lucide="user"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Gift Alert Strip -->
+    <div class="mobile-gift-strip" id="gift-strip" style="display: none;">
+      <span class="gift-icon">🎁</span>
+      <span class="gift-text" id="gift-strip-text">ได้รับของขวัญ</span>
+    </div>
+  </header>
+
+  <!-- Mobile Chat Feed (Optimized for Reading from a Distance) -->
+  <main class="mobile-chat-feed" id="mobile-chat-feed">
+    <div class="mobile-welcome-card" id="welcome-card">
+      <div class="welcome-icon">📱</div>
+      <h2>โหมดอ่านแชทบนมือถือ</h2>
+      <p>เหมาะสำหรับตั้งมือถือไว้ข้างตัวเพื่ออ่านคอมเมนต์ตอนกำลังไลฟ์</p>
+      
+      <div class="quick-connect-box">
+        <input 
+          type="text" 
+          id="mobile-username-input" 
+          class="mobile-input" 
+          placeholder="ใส่ชื่อ TikTok @username..."
+          autocomplete="off"
+        >
+        <button id="btn-mobile-connect" class="mobile-btn-primary">
+          เริ่มอ่านแชท
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Resume Auto-scroll floating button -->
+  <button id="btn-resume-scroll" class="floating-resume-btn" style="display: none;">
+    <i data-lucide="arrow-down"></i>
+    <span>มีข้อความใหม่ (แตะเพื่อเลื่อนลง)</span>
+  </button>
+
+  <!-- Change Channel Dialog -->
+  <div class="mobile-modal" id="channel-modal">
+    <div class="mobile-modal-content">
+      <div class="modal-title">
+        <h3>เปลี่ยนช่อง TikTok</h3>
+        <button class="modal-close-btn" id="btn-close-channel-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <input 
+          type="text" 
+          id="modal-username-input" 
+          class="mobile-input" 
+          placeholder="@username ที่กำลัง Live"
+        >
+        <button id="btn-modal-connect" class="mobile-btn-primary" style="margin-top: 12px;">
+          เชื่อมต่อ
+        </button>
+
+        <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 14px;">
+          <h4 style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 8px;">ขนาดตัวอักษร:</h4>
+          <div class="font-size-buttons">
+            <button class="size-opt-btn" data-size="medium">ปกติ (M)</button>
+            <button class="size-opt-btn active" data-size="large">ใหญ่ (L)</button>
+            <button class="size-opt-btn" data-size="xlarge">ใหญ่พิเศษ (XL)</button>
+            <button class="size-opt-btn" data-size="xxlarge">ยักษ์ (XXL)</button>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px;">
+          <label style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #e2e8f0;">
+            <input type="checkbox" id="mobile-tts-toggle" style="width: 20px; height: 20px;">
+            <span>เปิดเสียงอ่านข้อความ (TTS ผ่านมือถือ)</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/mobile.js"></script>
+</body>
+</html>
