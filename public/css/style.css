@@ -1,0 +1,704 @@
+:root {
+  --bg-main: #07090e;
+  --bg-surface: #111622;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --primary-pink: #fe2c55;
+  --primary-cyan: #25f4ee;
+  --accent-gold: #ffbe1a;
+  --accent-green: #00f076;
+  
+  --font-chat: 1.35rem; /* Default Large */
+  --font-meta: 0.95rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Kanit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-main);
+  color: #ffffff;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Font Size tiers */
+body.font-m { --font-chat: 1.15rem; --font-meta: 0.85rem; }
+body.font-l { --font-chat: 1.4rem; --font-meta: 0.95rem; }
+body.font-xl { --font-chat: 1.75rem; --font-meta: 1.15rem; }
+body.font-xxl { --font-chat: 2.2rem; --font-meta: 1.35rem; }
+
+/* View Switching */
+.screen-view {
+  display: none;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+}
+
+.screen-view.active {
+  display: flex;
+}
+
+/* =========================================
+   DEVICE ADAPTIVE LAYOUTS
+========================================= */
+/* Mobile Mode */
+body.device-mobile {
+  background-color: #000000;
+}
+body.device-mobile .chat-feed {
+  padding: 12px;
+  max-width: 100%;
+}
+body.device-mobile .chat-card {
+  padding: 12px 14px;
+}
+body.device-mobile .desktop-only {
+  display: none !important;
+}
+
+/* Desktop Mode */
+body.device-desktop {
+  background-color: #07090e;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(254, 44, 85, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(37, 244, 238, 0.05) 0%, transparent 40%);
+}
+body.device-desktop .live-header {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 0 0 16px 16px;
+  border: 1px solid var(--border-color);
+  border-top: none;
+}
+
+/* =========================================
+   LIVE STATS BAR (4 รายการ)
+========================================= */
+.live-stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 8px 12px;
+  background: #090c12;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+  z-index: 9;
+}
+
+body.device-desktop .live-stats-bar {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  padding: 10px 16px;
+}
+
+.stat-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  transition: all 0.2s ease;
+}
+
+.stat-pill:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.stat-pill-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.95rem;
+}
+
+.stat-pill-icon i {
+  width: 18px;
+  height: 18px;
+}
+
+.stat-pill-icon.color-viewers { background: rgba(37, 244, 238, 0.15); color: var(--primary-cyan); }
+.stat-pill-icon.color-followers { background: rgba(192, 132, 252, 0.15); color: #c084fc; }
+.stat-pill-icon.color-diamonds { background: rgba(255, 190, 26, 0.15); color: var(--accent-gold); }
+.stat-pill-icon.color-likes { background: rgba(254, 44, 85, 0.15); color: var(--primary-pink); }
+
+.stat-pill-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.stat-pill-title {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.stat-pill-title-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.diamond-thb-sub {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #4ade80; /* bright green for money */
+  background: rgba(74, 222, 128, 0.12);
+  padding: 1px 4px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.stat-pill-val {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 480px) {
+  .live-stats-bar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    padding: 6px 8px;
+  }
+  .stat-pill {
+    padding: 6px 8px;
+  }
+  .stat-pill-icon {
+    width: 28px;
+    height: 28px;
+  }
+  .stat-pill-icon i {
+    width: 15px;
+    height: 15px;
+  }
+  .stat-pill-val {
+    font-size: 0.95rem;
+  }
+}
+body.device-desktop .desktop-shortcuts-bar {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px 16px;
+  font-size: 0.78rem;
+  color: #64748b;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+body.device-desktop .desktop-shortcuts-bar strong {
+  color: var(--primary-cyan);
+}
+body.device-desktop .chat-feed {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Device Indicator Badges */
+.device-pill {
+  background: rgba(37, 244, 238, 0.15) !important;
+  color: var(--primary-cyan) !important;
+  border-color: rgba(37, 244, 238, 0.3) !important;
+  font-weight: 600;
+}
+
+.streamer-submeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.device-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+/* =========================================
+   STEP 1: CONNECT SCREEN
+========================================= */
+#view-connect {
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: radial-gradient(circle at center, rgba(254, 44, 85, 0.06) 0%, rgba(7, 9, 14, 1) 70%);
+}
+
+.connect-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 36px 28px;
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand-badge-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--primary-pink), #ff0055);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.8rem;
+  box-shadow: 0 0 30px rgba(254, 44, 85, 0.4);
+}
+
+.connect-card h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin-top: -8px;
+}
+
+.connect-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.input-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-field .prefix {
+  position: absolute;
+  left: 16px;
+  color: var(--primary-pink);
+  font-weight: 700;
+  font-size: 1.2rem;
+  pointer-events: none;
+}
+
+.input-field input {
+  width: 100%;
+  padding: 16px 16px 16px 38px;
+  background: #090c12;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 1.1rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input-field input:focus {
+  border-color: var(--primary-cyan);
+  box-shadow: 0 0 16px rgba(37, 244, 238, 0.3);
+}
+
+.btn-main {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--primary-pink), #ff0055);
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 8px 24px rgba(254, 44, 85, 0.35);
+  transition: all 0.2s ease;
+}
+
+.btn-main:active {
+  transform: scale(0.98);
+}
+
+.error-text {
+  color: #ff4d4f;
+  font-size: 0.9rem;
+  background: rgba(255, 77, 79, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 77, 79, 0.2);
+}
+
+.feature-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.feature-pills span {
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  color: #94a3b8;
+}
+
+/* =========================================
+   STEP 2 & 3: LIVE SCREEN (CHAT & ALERTS)
+========================================= */
+#view-live {
+  background-color: var(--bg-main);
+}
+
+/* Header */
+.live-header {
+  background: #0d1117;
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.live-status-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.live-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--primary-pink);
+  box-shadow: 0 0 10px var(--primary-pink);
+  animation: livePulse 1.2s infinite;
+}
+
+@keyframes livePulse {
+  0%, 100% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+
+.streamer-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.streamer-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.viewer-count {
+  font-size: 0.8rem;
+  color: var(--primary-cyan);
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 800;
+}
+
+.btn-icon:active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-exit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Chat Feed */
+.chat-feed {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.stream-ready-card {
+  margin: auto;
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.stream-ready-card i {
+  color: var(--accent-green);
+  width: 48px;
+  height: 48px;
+}
+
+.stream-ready-card h3 {
+  font-size: 1.3rem;
+  color: #fff;
+}
+
+/* 1. CHAT MESSAGE CARD */
+.chat-card {
+  background: #111622;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: popIn 0.2s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-author {
+  font-size: var(--font-meta);
+  font-weight: 700;
+}
+
+.color-0 { color: #38bdf8; }
+.color-1 { color: #f472b6; }
+.color-2 { color: #facc15; }
+.color-3 { color: #4ade80; }
+.color-4 { color: #c084fc; }
+.color-5 { color: #fb923c; }
+
+.card-time {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.card-text {
+  font-size: var(--font-chat);
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* JUMBO EMOJI MODE (เมื่อข้อความเป็นอิโมจิล้วน) */
+.card-text.jumbo-emoji {
+  font-size: calc(var(--font-chat) * 1.6);
+  line-height: 1.25;
+  padding: 4px 0;
+  letter-spacing: 2px;
+}
+
+/* TIKTOK CUSTOM EMOTE / STICKER */
+.chat-emote-wrapper {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.chat-emote-img {
+  max-height: 72px;
+  max-width: 120px;
+  object-fit: contain;
+  border-radius: 8px;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+  animation: emotePop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes emotePop {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.inline-emote {
+  height: 1.4em;
+  vertical-align: -0.25em;
+  margin: 0 2px;
+  object-fit: contain;
+}
+
+/* 2. GIFT ALERT CARD */
+.gift-card-alert {
+  background: linear-gradient(135deg, rgba(40, 30, 10, 0.95), rgba(25, 20, 10, 0.95));
+  border: 1.5px solid var(--accent-gold);
+  border-radius: 16px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  animation: bounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 0 20px rgba(255, 190, 26, 0.25);
+}
+
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.gift-alert-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gift-alert-icon {
+  font-size: 2rem;
+}
+
+.gift-alert-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.gift-alert-sender {
+  font-size: var(--font-meta);
+  font-weight: 700;
+  color: #fff;
+}
+
+.gift-alert-gift {
+  font-size: calc(var(--font-meta) + 0.1rem);
+  font-weight: 600;
+  color: var(--accent-gold);
+}
+
+.gift-alert-combo {
+  font-size: calc(var(--font-chat) + 0.3rem);
+  font-weight: 900;
+  color: var(--primary-pink);
+  text-shadow: 0 0 10px rgba(254, 44, 85, 0.5);
+}
+
+/* 3. FOLLOW ALERT CARD */
+.follow-card-alert {
+  background: linear-gradient(135deg, rgba(45, 15, 25, 0.95), rgba(30, 10, 20, 0.95));
+  border: 1.5px solid var(--primary-pink);
+  border-radius: 16px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: popIn 0.25s ease-out;
+  box-shadow: 0 0 16px rgba(254, 44, 85, 0.25);
+}
+
+.follow-alert-icon {
+  font-size: 1.6rem;
+}
+
+.follow-alert-text {
+  font-size: var(--font-chat);
+  font-weight: 600;
+  color: #fff;
+}
+
+.follow-alert-text strong {
+  color: var(--primary-pink);
+}
+
+/* Floating Resume Scroll button */
+.floating-scroll-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--primary-cyan), #00b4d8);
+  color: #000;
+  font-weight: 800;
+  font-size: 0.9rem;
+  font-family: inherit;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  border: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  z-index: 50;
+}
